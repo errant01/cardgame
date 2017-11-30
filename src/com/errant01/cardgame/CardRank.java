@@ -1,4 +1,4 @@
-package com.errant01.cardgamee;
+package com.errant01.cardgame;
 
 public class CardRank {
 
