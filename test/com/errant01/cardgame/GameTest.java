@@ -59,19 +59,7 @@ public class GameTest {
     public void sortHands() throws Exception {
         Game g = new Game(h1, h2);
         g.sortHands();
-
-        // check hand1
-        assertEquals(g.getHand1().getCards().get(0).getValue(), h1a[0].getValue());
-        assertEquals(g.getHand1().getCards().get(0).getSuit(), h1a[0].getSuit());
-        assertEquals(g.getHand1().getCards().get(1).getValue(), h1a[1].getValue());
-        assertEquals(g.getHand1().getCards().get(1).getSuit(), h1a[1].getSuit());
-
-        // check hand2
-        assertEquals(g.getHand2().getCards().get(0).getValue(), h2a[2].getValue());
-        assertEquals(g.getHand2().getCards().get(0).getSuit(), h2a[2].getSuit());
-        assertEquals(g.getHand2().getCards().get(1).getValue(), h2a[0].getValue());
-        assertEquals(g.getHand2().getCards().get(1).getSuit(), h2a[0].getSuit());
-        assertEquals(g.getHand2().getCards().get(2).getValue(), h2a[1].getValue());
-        assertEquals(g.getHand2().getCards().get(2).getSuit(), h2a[1].getSuit());
+        assertTrue(g.getHand1().isSorted());
+        assertTrue(g.getHand2().isSorted());
     }
 }

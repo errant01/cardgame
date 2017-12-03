@@ -26,6 +26,11 @@ public class Game {
         hand2.sort();
     }
 
+    public void evaluateHands() {
+        hand1.evaluate();
+        hand2.evaluate();
+    }
+
     public String asString() {
         return hand1.asString() + System.getProperty("line.separator") + hand2.asString();
     }
