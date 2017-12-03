@@ -11,6 +11,14 @@ public class Game {
         this.hand2 = hand2;
     }
 
+    public Card[] getHand1() {
+        return hand1;
+    }
+
+    public Card[] getHand2() {
+        return hand2;
+    }
+
 //    public void sortHand(Card[] hand) {
 //        Comparator<Card> comparator = Comparator.comparing(card -> card.getIntValue());
 //        comparator = comparator.thenComparing(Comparator.comparing(card -> card.getSuit()));

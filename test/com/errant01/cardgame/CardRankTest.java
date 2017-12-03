@@ -8,6 +8,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+// TODO Change this test to check Game constructor and that hands are loaded.
+
 public class CardRankTest {
 
     private String output;
