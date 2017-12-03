@@ -11,22 +11,15 @@ public class Card {
         this.suit = suit;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
     public String getSuit() {
         return suit;
     }
 
-    public void setSuit(String suit) {
-        this.suit = suit;
+    public String getValue() {
+        return value;
     }
 
+    // TODO improve perf - this is an expensive calc to make on sorting Comparator
     public Integer getIntValue() {
         try {
             return new Integer(this.value);
@@ -52,21 +45,11 @@ public class Card {
         }
     }
 
+    /**
+     * For logging to console
+     * @return Card in format "$value $suit"
+     */
     public String asString() {
         return this.value + " " + this.suit;
     }
-
-    public static Comparator<Card> CardRankComparator = new Comparator<Card>() {
-        @Override
-        public int compare(Card c1, Card c2) {
-            return c1.getIntValue().compareTo(c2.getIntValue());
-        }
-    };
-
-    public static Comparator<Card> CardSuitComparator = new Comparator<Card>() {
-        @Override
-        public int compare(Card c1, Card c2) {
-            return c1.getSuit().toUpperCase().compareTo(c2.getSuit().toUpperCase());
-        }
-    };
 }
