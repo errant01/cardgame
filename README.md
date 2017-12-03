@@ -1,5 +1,5 @@
 # cardgame
-Package to rank hands in a card game
+Package to value hands in a card game
 
 # Setup
 Install Java 8 JDK per OS requirements
