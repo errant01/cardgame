@@ -25,6 +25,6 @@ after Compile app step
 
 cd ../test
 
-javac -cp ../src:../ext/lib/junit-4.12.jar com/errant01/cardgame/CardRankTest.java
+javac -cp ../src:../ext/lib/junit-4.12.jar com/errant01/cardgame/GameTest.java
 
-java -cp .:../src:../ext/lib/junit-4.12.jar:../ext/lib/hamcrest-core-1.3.jar org.junit.runner.JUnitCore com.errant01.cardgame.CardRankTest
+java -cp .:../src:../ext/lib/junit-4.12.jar:../ext/lib/hamcrest-core-1.3.jar org.junit.runner.JUnitCore com.errant01.cardgame.GameTest
