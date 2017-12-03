@@ -1,14 +1,12 @@
 package com.errant01.cardgame;
 
-import java.util.Comparator;
-
 public class Card {
     private String value;
     private String suit;
 
     public Card(String value, String suit) {
-        this.value = value;
-        this.suit = suit;
+        this.value = value.toUpperCase();
+        this.suit = suit.toUpperCase();
     }
 
     public String getSuit() {
@@ -25,7 +23,7 @@ public class Card {
             return new Integer(this.value);
         } catch (NumberFormatException ne) {
             int intVal = 0;
-            switch (this.value.toUpperCase()) {
+            switch (this.value) {
                 case "J":
                     intVal = 11;
                     break;
