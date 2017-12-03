@@ -46,7 +46,7 @@ public class Card {
     }
 
     /**
-     * For logging to console
+     * For console display
      * @return Card in format "$value $suit"
      */
     public String asString() {
