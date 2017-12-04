@@ -162,4 +162,67 @@ public class HandTest {
         noGroup.evaluate();
         assertTrue(noGroup.getBigGroup().get(0).getIntValue() > noGroup.getSmGroup().get(0).getIntValue());
     }
+
+    @Test
+    public void rankStraightFlush() throws Exception {
+        Hand hand = new Hand(Arrays.asList(straightFlush));
+        hand.findRank();
+        assertEquals(HandRank.STRAIGHT_FLUSH, hand.getRank());
+    }
+
+    @Test
+    public void rankFourOfaKind() throws Exception {
+        Hand hand = new Hand(Arrays.asList(fourKind));
+        hand.findRank();
+        assertEquals(HandRank.FOUR_OF_KIND, hand.getRank());
+    }
+
+    @Test
+    public void rankFullHouse() throws Exception {
+        Hand hand = new Hand(Arrays.asList(boat));
+        hand.findRank();
+        assertEquals(HandRank.FULL_HOUSE, hand.getRank());
+    }
+
+    @Test
+    public void rankFlush() throws Exception {
+        Hand hand = new Hand(Arrays.asList(flush));
+        hand.findRank();
+        assertEquals(HandRank.FLUSH, hand.getRank());
+    }
+
+    @Test
+    public void rankStraight() throws Exception {
+        Hand hand = new Hand(Arrays.asList(straight));
+        hand.findRank();
+        assertEquals(HandRank.STRAIGHT, hand.getRank());
+    }
+
+    @Test
+    public void rankThreeOfaKind() throws Exception {
+        Hand hand = new Hand(Arrays.asList(trips));
+        hand.findRank();
+        assertEquals(HandRank.THREE_OF_KIND, hand.getRank());
+    }
+
+    @Test
+    public void rankTwoPair() throws Exception {
+        Hand hand = new Hand(Arrays.asList(twoPair));
+        hand.findRank();
+        assertEquals(HandRank.TWO_PAIR, hand.getRank());
+    }
+
+    @Test
+    public void rankOnePair() throws Exception {
+        Hand hand = new Hand(Arrays.asList(onePair));
+        hand.findRank();
+        assertEquals(HandRank.PAIR, hand.getRank());
+    }
+
+    @Test
+    public void rankHighCard() throws Exception {
+        Hand hand = new Hand(Arrays.asList(highCard));
+        hand.findRank();
+        assertEquals(HandRank.HIGH_CARD, hand.getRank());
+    }
 }

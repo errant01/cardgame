@@ -15,6 +15,7 @@ public class Hand {
     private boolean straight = false;
     private List<Card> bigGroup = new ArrayList<>();
     private List<Card> smGroup = new ArrayList<>();
+    private HandRank rank;
 
     public Hand(List<Card> cards) {
         this.cards = cards;
@@ -48,8 +49,12 @@ public class Hand {
         return smGroup;
     }
 
+    public HandRank getRank() {
+        return rank;
+    }
+
     public void sort() {
-        // Use Java Streams with comparator, faster, more compact
+        // Use Java Streams with comparator, faster, more compact than old way
         Comparator<Card> comparator = Comparator.comparing(card -> card.getIntValue());
         comparator = comparator.reversed().thenComparing(Comparator.comparing(card -> card.getSuit()));
 
@@ -66,6 +71,51 @@ public class Hand {
             determineGroups();
         }
         evaluated = true;
+    }
+
+    public HandRank findRank() {
+        if (!this.evaluated) {
+            evaluate();
+        }
+
+        if (isStraight()) {
+            if (isFlush()) {
+                this.rank = HandRank.STRAIGHT_FLUSH;
+                return this.rank;
+            } else {
+                this.rank = HandRank.STRAIGHT;
+                return this.rank;
+            }
+        } else {
+            if (isFlush()) {
+                this.rank = HandRank.FLUSH;
+                return this.rank;
+            }
+        }
+
+        if (this.bigGroup.size() == 4) {
+            this.rank = HandRank.FOUR_OF_KIND;
+            return this.rank;
+        } else if (this.bigGroup.size() == 3) {
+            if (this.smGroup.size() == 2) {
+                this.rank = HandRank.FULL_HOUSE;
+                return this.rank;
+            } else {
+                this.rank = HandRank.THREE_OF_KIND;
+                return this.rank;
+            }
+        } else if (this.bigGroup.size() == 2) {
+            if (this.smGroup.size() == 2) {
+                this.rank = HandRank.TWO_PAIR;
+                return this.rank;
+            } else {
+                this.rank = HandRank.PAIR;
+                return this.rank;
+            }
+        }
+
+        this.rank = HandRank.HIGH_CARD;
+        return this.rank;
     }
 
     /**
