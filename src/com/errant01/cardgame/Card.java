@@ -1,6 +1,6 @@
 package com.errant01.cardgame;
 
-public class Card {
+public class Card implements Comparable<Card> {
     private String value;
     private String suit;
 
@@ -41,6 +41,17 @@ public class Card {
             }
             return new Integer(intVal);
         }
+    }
+
+    @Override
+    public int compareTo(Card c) {
+        // suits don't affect value ranking
+        if (this.getIntValue() == c.getIntValue() ) {
+            return 0;
+        } else {
+            return this.getIntValue() > c.getIntValue() ? 1 : -1;
+        }
+
     }
 
     /**

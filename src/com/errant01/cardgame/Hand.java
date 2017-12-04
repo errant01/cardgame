@@ -73,7 +73,7 @@ public class Hand {
         evaluated = true;
     }
 
-    public HandRank findRank() {
+    public void determineRank() {
         if (!this.evaluated) {
             evaluate();
         }
@@ -81,41 +81,40 @@ public class Hand {
         if (isStraight()) {
             if (isFlush()) {
                 this.rank = HandRank.STRAIGHT_FLUSH;
-                return this.rank;
+                return;
             } else {
                 this.rank = HandRank.STRAIGHT;
-                return this.rank;
+                return;
             }
         } else {
             if (isFlush()) {
                 this.rank = HandRank.FLUSH;
-                return this.rank;
+                return;
             }
         }
 
         if (this.bigGroup.size() == 4) {
             this.rank = HandRank.FOUR_OF_KIND;
-            return this.rank;
+            return;
         } else if (this.bigGroup.size() == 3) {
             if (this.smGroup.size() == 2) {
                 this.rank = HandRank.FULL_HOUSE;
-                return this.rank;
+                return;
             } else {
                 this.rank = HandRank.THREE_OF_KIND;
-                return this.rank;
+                return;
             }
         } else if (this.bigGroup.size() == 2) {
             if (this.smGroup.size() == 2) {
                 this.rank = HandRank.TWO_PAIR;
-                return this.rank;
+                return;
             } else {
                 this.rank = HandRank.PAIR;
-                return this.rank;
+                return;
             }
         }
 
         this.rank = HandRank.HIGH_CARD;
-        return this.rank;
     }
 
     /**

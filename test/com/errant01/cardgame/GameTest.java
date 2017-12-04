@@ -1,13 +1,12 @@
 package com.errant01.cardgame;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class GameTest {
 
@@ -22,19 +21,11 @@ public class GameTest {
             new Card("10", "H")
     };
 
-    private List<Card> h1;
-    private List<Card> h2;
+    private List<Card> h1 = Arrays.asList(h1a);
+    private List<Card> h2 = Arrays.asList(h2a);
 
-    @Before
-    public void setUp() throws Exception {
-        h1 = Arrays.asList(h1a);
-        h2 = Arrays.asList(h2a);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        h1 = null;
-        h2 = null;
+    private List<Card> initHand(Card[] cards) {
+        return Arrays.asList(cards);
     }
 
     @Test
@@ -61,5 +52,26 @@ public class GameTest {
         g.sortHands();
         assertTrue(g.getHand1().isSorted());
         assertTrue(g.getHand2().isSorted());
+    }
+
+    // functional tests - testing all the guts.
+    @Test
+    public void orderHands() throws Exception {
+        List<Card> cards1 = initHand(TestHands.STRAIGHT_FLUSH);
+        List<Card> cards2 = initHand(TestHands.FOUR_KIND);
+        Game g = new Game(cards1, cards2);
+        g.rankHands();
+        assertEquals(g.getHand1().getCards().get(0).getValue(), "A");
+        assertEquals(g.getHand2().getCards().get(0).getValue(), "J");
+    }
+
+    @Test
+    public void orderReversedHands() throws Exception {
+        List<Card> cards2 = initHand(TestHands.STRAIGHT_FLUSH);
+        List<Card> cards1 = initHand(TestHands.FOUR_KIND);
+        Game g = new Game(cards1, cards2);
+        g.orderHands();
+        assertEquals(g.getHand1().getCards().get(0).getValue(), "A");
+        assertEquals(g.getHand2().getCards().get(0).getValue(), "J");
     }
 }
