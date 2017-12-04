@@ -10,6 +10,33 @@ import static org.junit.Assert.assertTrue;
 
 public class HandTest {
 
+    // 4 of a kind
+    private Card[] fourKind = new Card[] {
+            new Card("10", "S"),
+            new Card("10", "C"),
+            new Card("10", "H"),
+            new Card("10", "D"),
+            new Card("J", "D")
+    };
+
+    // full house
+    private Card[] boat = new Card[] {
+            new Card("10", "S"),
+            new Card("J", "S"),
+            new Card("10", "H"),
+            new Card("10", "D"),
+            new Card("J", "D")
+    };
+
+    // 3 of a kind
+    private Card[] trips = new Card[] {
+            new Card("10", "D"),
+            new Card("8", "S"),
+            new Card("10", "S"),
+            new Card("J", "D"),
+            new Card("10", "H")
+    };
+
     // 2 pair
     private Card[] twoPair = new Card[] {
             new Card("10", "S"),
@@ -26,6 +53,15 @@ public class HandTest {
             new Card("9", "S"),
             new Card("J", "D"),
             new Card("10", "H")
+    };
+
+    // high card
+    private Card[] highCard = new Card[] {
+            new Card("10", "D"),
+            new Card("8", "S"),
+            new Card("9", "S"),
+            new Card("J", "D"),
+            new Card("4", "H")
     };
 
     // straight
@@ -87,5 +123,43 @@ public class HandTest {
         Hand trueHand = new Hand(Arrays.asList(straight));
         trueHand.evaluate();
         assertTrue(trueHand.isStraight());
+    }
+
+    @Test
+    public void determineNoGroups() throws Exception {
+        Hand noGroup = new Hand(Arrays.asList(highCard));
+        noGroup.evaluate();
+        assertTrue(noGroup.getBigGroup().isEmpty());
+        assertTrue(noGroup.getSmGroup().isEmpty());
+    }
+
+    @Test
+    public void determineOneGroup() throws Exception {
+        Hand noGroup = new Hand(Arrays.asList(onePair));
+        noGroup.evaluate();
+        assertFalse(noGroup.getBigGroup().isEmpty());
+        assertTrue(noGroup.getSmGroup().isEmpty());
+    }
+
+    @Test
+    public void determineTwoGroup() throws Exception {
+        Hand noGroup = new Hand(Arrays.asList(twoPair));
+        noGroup.evaluate();
+        assertFalse(noGroup.getBigGroup().isEmpty());
+        assertFalse(noGroup.getSmGroup().isEmpty());
+    }
+
+    @Test
+    public void determineBigGroupIsBigger() throws Exception {
+        Hand noGroup = new Hand(Arrays.asList(boat));
+        noGroup.evaluate();
+        assertTrue(noGroup.getBigGroup().size() > noGroup.getSmGroup().size());
+    }
+
+    @Test
+    public void determineBigGroupIsHigherWhenPairs() throws Exception {
+        Hand noGroup = new Hand(Arrays.asList(twoPair));
+        noGroup.evaluate();
+        assertTrue(noGroup.getBigGroup().get(0).getIntValue() > noGroup.getSmGroup().get(0).getIntValue());
     }
 }
