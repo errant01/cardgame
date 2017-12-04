@@ -1,12 +1,10 @@
 # cardgame
-Package to value hands in a card game
+Package to rank hands in a card game
 
 # Setup
 Install Java 8 JDK per OS requirements
 
 Go to repo root dir
-
-// cd src
 
 run java -version and make sure it returns the expected version
 
@@ -25,6 +23,6 @@ after Compile app step
 
 cd ../test
 
-javac -cp ../src:../ext/lib/junit-4.12.jar com/errant01/cardgame/GameTest.java
+javac -cp ../src:../ext/lib/junit-4.12.jar com/errant01/cardgame/CardRankTestSuite.java
 
-java -cp .:../src:../ext/lib/junit-4.12.jar:../ext/lib/hamcrest-core-1.3.jar org.junit.runner.JUnitCore com.errant01.cardgame.GameTest
+java -cp .:../src:../ext/lib/junit-4.12.jar:../ext/lib/hamcrest-core-1.3.jar org.junit.runner.JUnitCore com.errant01.cardgame.CardRankTestSuite

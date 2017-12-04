@@ -9,49 +9,22 @@ public class CardRank {
     // Deck to use and Game to play, then load assoc data (like initial hands from the deck)
     // At this stage, a Deck would only be used to verify that hands contain legal cards
 
-    // 2 pair
-//    private static Card[] hand1 = new Card[] {
-//            new Card("10", "S"),
-//            new Card("J", "S"),
-//            new Card("10", "H"),
-//            new Card("8", "D"),
-//            new Card("J", "D")
-//    };
-//
-    // 1 pair
-//    private static Card[] hand2 = new Card[] {
-//            new Card("10", "D"),
-//            new Card("8", "S"),
-//            new Card("9", "S"),
-//            new Card("J", "D"),
-//            new Card("10", "H")
-//    };
-
-//    // straight
-//    private static Card[] hand1 = new Card[] {
-//            new Card("10", "S"),
-//            new Card("K", "D"),
-//            new Card("J", "S"),
-//            new Card("Q", "H"),
-//            new Card("A", "D")
-//    };
-
-    // straight flush
+    // full house
     private static Card[] hand1 = new Card[] {
             new Card("10", "S"),
-            new Card("K", "s"),
             new Card("J", "S"),
-            new Card("Q", "s"),
-            new Card("A", "s")
+            new Card("10", "H"),
+            new Card("10", "D"),
+            new Card("J", "D")
     };
 
-    // flush
+    // 1 pair
     private static Card[] hand2 = new Card[] {
             new Card("10", "D"),
-            new Card("8", "d"),
-            new Card("9", "d"),
+            new Card("8", "S"),
+            new Card("9", "S"),
             new Card("J", "D"),
-            new Card("3", "d")
+            new Card("10", "H")
     };
 
     public static void main(String[] args) {
@@ -64,5 +37,4 @@ public class CardRank {
         System.out.println("----  After ----");
         System.out.println(game.asString());
     }
-
 }
