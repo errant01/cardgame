@@ -1,17 +1,20 @@
 package com.errant01.cardgame;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Hand {
     private List<Card> cards;
     private boolean sorted = false;
+    private boolean evaluated = false;
     private boolean flush = false;
     private boolean straight = false;
-    private List<Card> bigGroup;
-    private List<Card> smGroup;
+    private List<Card> bigGroup = new ArrayList<>();
+    private List<Card> smGroup = new ArrayList<>();
 
     public Hand(List<Card> cards) {
         this.cards = cards;
@@ -23,6 +26,10 @@ public class Hand {
 
     public boolean isSorted() {
         return sorted;
+    }
+
+    public boolean isEvaluated() {
+        return evaluated;
     }
 
     public boolean isFlush() {
@@ -55,6 +62,10 @@ public class Hand {
     public void evaluate() {
         determineFlush();
         determineStraight();
+        if (!straight && !flush) {
+            determineGroups();
+        }
+        evaluated = true;
     }
 
     /**
@@ -74,6 +85,12 @@ public class Hand {
         }
         if (this.flush) {
             sb.append(" ").append("isFlush");
+        }
+        if (!this.bigGroup.isEmpty()) {
+            sb.append(" ").append(this.bigGroup.size()).append(" of ").append(this.bigGroup.get(0).getValue());
+        }
+        if (!this.smGroup.isEmpty()) {
+            sb.append(" ").append(this.smGroup.size()).append(" of ").append(this.smGroup.get(0).getValue());
         }
         return sb.toString();
     }
@@ -111,5 +128,34 @@ public class Hand {
 
     private boolean isTwoCardSeq(Card c1, Card c2) {
         return c1.getIntValue() - c2.getIntValue() == 1;
+    }
+
+    // groups are only value based
+    private void determineGroups() {
+        Map<String, List<Card>> mapOfGroups = this.cards.stream()
+                .collect(Collectors.groupingBy(Card::getValue));
+
+        // this group split is specific to 5 card Poker
+        for (String value : mapOfGroups.keySet()) {
+            if (mapOfGroups.get(value).size() > 1) {
+                if (this.bigGroup.isEmpty()) {
+                    this.bigGroup.addAll(mapOfGroups.get(value));
+                } else {
+                    // there can be no more than 2 groups of two or more things, so no more groups will match
+                    this.smGroup.addAll(mapOfGroups.get(value));
+                }
+            }
+        }
+
+        orderGroups();
+    }
+
+    private void orderGroups() {
+        if (this.smGroup.size() > this.bigGroup.size()) {
+            // swap
+            List<Card> tempGroup = this.bigGroup;
+            this.bigGroup = this.smGroup;
+            this.smGroup = tempGroup;
+        }
     }
 }
