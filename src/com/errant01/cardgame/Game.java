@@ -1,5 +1,6 @@
 package com.errant01.cardgame;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
@@ -10,8 +11,8 @@ public class Game {
 
     public Game(List<Card> cards1, List<Card> cards2) {
 
-        this.hand1 = new Hand(cards1);
-        this.hand2 = new Hand(cards2);;
+        hand1 = new Hand(cards1);
+        hand2 = new Hand(cards2);;
     }
 
     public Hand getHand1() {
@@ -20,6 +21,10 @@ public class Game {
 
     public Hand getHand2() {
         return hand2;
+    }
+
+    public boolean isTie() {
+        return tie;
     }
 
     public void sortHands() {
@@ -55,51 +60,99 @@ public class Game {
         switch (hand1.getRank()) {
             case STRAIGHT_FLUSH:
                 // check high card only
-                orderHandsByCompareAtCardIndex(0);
+                orderHandsByCompareAtCardIndex(0, hand1.getCards(), hand2.getCards());
                 break;
             case FOUR_OF_KIND:
-                // check high card, if tie, check last card
-                orderHandsByCompareAtCardIndex(0);
-                if (this.tie) {
-                    tie = false;
-                    orderHandsByCompareAtCardIndex(4);
+                // check big group card, if tie, remove group and check remaining card
+                orderHandsByGroups();
+
+                if (tie) {
+                    orderByHandsMinusGroups();
                 }
                 break;
             case FULL_HOUSE:
-                // check big big group, if tie, check small group
+                // check big group, if tie, check small group
+                orderHandsByGroups();
                 break;
             case FLUSH:
                 // check next highest card
+                orderHandsByNextHighestCard(0, hand1.getCards(), hand2.getCards());
                 break;
             case STRAIGHT:
                 // check high card only
-                orderHandsByCompareAtCardIndex(0);
+                orderHandsByCompareAtCardIndex(0, hand1.getCards(), hand2.getCards());
                 break;
             case THREE_OF_KIND:
-                // check high group, if tie, check for next highest card
+                // check high group, if tie, check for next highest card after removing group
+                orderHandsByGroups();
+                if (tie) {
+                    orderByHandsMinusGroups();
+                }
                 break;
             case TWO_PAIR:
                 // check high group, if tie, check lo group, if tie, check high last card
+                orderHandsByGroups();
+
+                if (tie) {
+                    orderByHandsMinusGroups();
+                }
                 break;
             case PAIR:
-                // check high group, if tie then high card
+                // check high group, if tie then remove group, check for high card
+                orderHandsByGroups();
+
+                if (tie) {
+                    orderByHandsMinusGroups();
+                }
+
                 break;
             case HIGH_CARD:
                 // check next highest card
-                orderHandsByNextHighestCard(0);
+                orderHandsByNextHighestCard(0, hand1.getCards(), hand2.getCards());
                 break;
         }
     }
 
-    private void orderHandsByNextHighestCard(int startIndex) {
-        while (startIndex < hand1.getCards().size() && this.tie) {
-            orderHandsByCompareAtCardIndex(startIndex);
-            startIndex++;
+    // TODO extract these ordering to util class with public methods for isolated testing
+    // Util class returns boolean for swap or not, swap is handled in this class
+    // must pass card Lists in hand1, hand2 order
+
+    private void orderByHandsMinusGroups() {
+        List<Card> compHand1 = cardsMinusGroups(hand1);
+        List<Card> compHand2 = cardsMinusGroups(hand2);
+        orderHandsByNextHighestCard(0, compHand1, compHand2);
+    }
+    private void orderHandsByGroups() {
+        Integer intValGroup1 = hand1.getBigGroup().get(0).getIntegerValue();
+        Integer intValGroup2 = hand2.getBigGroup().get(0).getIntegerValue();
+        if (intValGroup1.equals(intValGroup2)) {
+            tie = true;
+        } else if (intValGroup2 > intValGroup1) {
+            swapHands();
+        }
+
+        if (tie && !hand1.getSmGroup().isEmpty()) {
+            tie = false;
+            intValGroup1 = hand1.getSmGroup().get(0).getIntegerValue();
+            intValGroup2 = hand2.getSmGroup().get(0).getIntegerValue();
+            if (intValGroup1.equals(intValGroup2)) {
+                tie = true;
+            } else if (intValGroup2 > intValGroup1) {
+                swapHands();
+            }
         }
     }
 
-    private void orderHandsByCompareAtCardIndex(int index) {
-        int compareValue = hand1.getCards().get(index).compareTo(hand2.getCards().get(index));
+    private void orderHandsByNextHighestCard(int index, List<Card> h1, List<Card> h2) {
+        while (index < h1.size() && tie) {
+            orderHandsByCompareAtCardIndex(index, h1, h2);
+            index++;
+        }
+    }
+
+    // must pass card Lists in hand1, hand2 order
+    private void orderHandsByCompareAtCardIndex(int index, List<Card> h1, List<Card> h2) {
+        int compareValue = h1.get(index).compareTo(h2.get(index));
         if (compareValue == 0) {
             tie = true;
         } else if (compareValue == -1) { // swap hand1 with hand2
@@ -110,8 +163,14 @@ public class Game {
         }
     }
 
+    private List<Card> cardsMinusGroups(Hand h) {
+        List<Card> leftovers = new ArrayList<>(h.getCards());
+        leftovers.removeAll(h.getBigGroup());
+        leftovers.removeAll(h.getSmGroup());
+        return leftovers;
+    }
+
     private void swapHands() {
-        System.out.println("Swapping hands");
         Hand temp = hand1;
         hand1 = hand2;
         hand2 = temp;

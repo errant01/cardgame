@@ -29,10 +29,6 @@ public class Hand {
         return sorted;
     }
 
-    public boolean isEvaluated() {
-        return evaluated;
-    }
-
     public boolean isFlush() {
         return flush;
     }
@@ -55,7 +51,7 @@ public class Hand {
 
     public void sort() {
         // Use Java Streams with comparator, faster, more compact than old way
-        Comparator<Card> comparator = Comparator.comparing(card -> card.getIntValue());
+        Comparator<Card> comparator = Comparator.comparing(card -> card.getIntegerValue());
         comparator = comparator.reversed().thenComparing(Comparator.comparing(card -> card.getSuit()));
 
         Stream<Card> cardStream = cards.stream().sorted(comparator);
@@ -74,47 +70,47 @@ public class Hand {
     }
 
     public void determineRank() {
-        if (!this.evaluated) {
+        if (!evaluated) {
             evaluate();
         }
 
         if (isStraight()) {
             if (isFlush()) {
-                this.rank = HandRank.STRAIGHT_FLUSH;
+                rank = HandRank.STRAIGHT_FLUSH;
                 return;
             } else {
-                this.rank = HandRank.STRAIGHT;
+                rank = HandRank.STRAIGHT;
                 return;
             }
         } else {
             if (isFlush()) {
-                this.rank = HandRank.FLUSH;
+                rank = HandRank.FLUSH;
                 return;
             }
         }
 
-        if (this.bigGroup.size() == 4) {
-            this.rank = HandRank.FOUR_OF_KIND;
+        if (bigGroup.size() == 4) {
+            rank = HandRank.FOUR_OF_KIND;
             return;
-        } else if (this.bigGroup.size() == 3) {
-            if (this.smGroup.size() == 2) {
-                this.rank = HandRank.FULL_HOUSE;
+        } else if (bigGroup.size() == 3) {
+            if (smGroup.size() == 2) {
+                rank = HandRank.FULL_HOUSE;
                 return;
             } else {
-                this.rank = HandRank.THREE_OF_KIND;
+                rank = HandRank.THREE_OF_KIND;
                 return;
             }
-        } else if (this.bigGroup.size() == 2) {
-            if (this.smGroup.size() == 2) {
-                this.rank = HandRank.TWO_PAIR;
+        } else if (bigGroup.size() == 2) {
+            if (smGroup.size() == 2) {
+                rank = HandRank.TWO_PAIR;
                 return;
             } else {
-                this.rank = HandRank.PAIR;
+                rank = HandRank.PAIR;
                 return;
             }
         }
 
-        this.rank = HandRank.HIGH_CARD;
+        rank = HandRank.HIGH_CARD;
     }
 
     /**
@@ -124,22 +120,22 @@ public class Hand {
     public String asString() {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
-        for (Card card: this.cards) {
+        for (Card card: cards) {
             sb.append(card.asString()).append(", ");
         }
         sb.deleteCharAt(sb.length() - 1);
         sb.append("]");
-        if (this.straight) {
+        if (straight) {
             sb.append(" ").append("isStraight");
         }
-        if (this.flush) {
+        if (flush) {
             sb.append(" ").append("isFlush");
         }
-        if (!this.bigGroup.isEmpty()) {
-            sb.append(" ").append(this.bigGroup.size()).append(" of ").append(this.bigGroup.get(0).getValue());
+        if (!bigGroup.isEmpty()) {
+            sb.append(" ").append(bigGroup.size()).append(" of ").append(bigGroup.get(0).getValue());
         }
-        if (!this.smGroup.isEmpty()) {
-            sb.append(" ").append(this.smGroup.size()).append(" of ").append(this.smGroup.get(0).getValue());
+        if (!smGroup.isEmpty()) {
+            sb.append(" ").append(smGroup.size()).append(" of ").append(smGroup.get(0).getValue());
         }
         return sb.toString();
     }
@@ -149,12 +145,12 @@ public class Hand {
         if (!sorted) {
             sort();
         }
-        this.flush = true;
-        String compareSuit = this.cards.get(0).getSuit();
+        flush = true;
+        String compareSuit = cards.get(0).getSuit();
         // only LinkedList suffers for perf on for with counter loops, so ok to use to skip 0 index
-        for (int i = 1; i < this.cards.size(); i++) {
-            if (!this.cards.get(i).getSuit().equals(compareSuit)) {
-                this.flush = false;
+        for (int i = 1; i < cards.size(); i++) {
+            if (!cards.get(i).getSuit().equals(compareSuit)) {
+                flush = false;
                 break;
             }
         }
@@ -165,46 +161,53 @@ public class Hand {
         if (!sorted) {
             sort();
         }
-        this.straight = true;
+        straight = true;
         // check that all cards are a single decrement from previous
-        for (int i = 0; i < this.cards.size() - 1; i++) {
-            if (!isTwoCardSeq(this.cards.get(i), this.cards.get(i + 1))) {
-                this.straight = false;
+        for (int i = 0; i < cards.size() - 1; i++) {
+            if (!isTwoCardSeq(cards.get(i), cards.get(i + 1))) {
+                straight = false;
                 break;
             }
         }
     }
 
     private boolean isTwoCardSeq(Card c1, Card c2) {
-        return c1.getIntValue() - c2.getIntValue() == 1;
+        return c1.getIntegerValue() - c2.getIntegerValue() == 1;
     }
 
     // groups are only value based
     private void determineGroups() {
-        Map<String, List<Card>> mapOfGroups = this.cards.stream()
+        Map<String, List<Card>> mapOfGroups = cards.stream()
                 .collect(Collectors.groupingBy(Card::getValue));
 
         // this group split is specific to 5 card Poker
         for (String value : mapOfGroups.keySet()) {
             if (mapOfGroups.get(value).size() > 1) {
-                if (this.bigGroup.isEmpty()) {
-                    this.bigGroup.addAll(mapOfGroups.get(value));
+                if (bigGroup.isEmpty()) {
+                    bigGroup.addAll(mapOfGroups.get(value));
                 } else {
                     // there can be no more than 2 groups of two or more things, so no more groups will match
-                    this.smGroup.addAll(mapOfGroups.get(value));
+                    smGroup.addAll(mapOfGroups.get(value));
                 }
             }
         }
 
-        orderGroups();
+        if (hasGroups()) {
+            orderGroups();
+        }
     }
 
     private void orderGroups() {
-        if (this.smGroup.size() > this.bigGroup.size()) {
+        if ((smGroup.size() > bigGroup.size())
+                || (smGroup.size() == bigGroup.size() && (smGroup.get(0).getIntegerValue() > bigGroup.get(0).getIntegerValue()))) {
             // swap
-            List<Card> tempGroup = this.bigGroup;
-            this.bigGroup = this.smGroup;
-            this.smGroup = tempGroup;
+            List<Card> tempGroup = bigGroup;
+            bigGroup = smGroup;
+            smGroup = tempGroup;
         }
+    }
+
+    private boolean hasGroups() {
+        return bigGroup.size() > 0;
     }
 }

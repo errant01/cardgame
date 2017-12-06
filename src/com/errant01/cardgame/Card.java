@@ -18,12 +18,14 @@ public class Card implements Comparable<Card> {
     }
 
     // TODO improve perf - this is an expensive calc to make on sorting Comparator
-    public Integer getIntValue() {
+    // TODO go back to int: used Integer here over int for simplicity of parseInt test and return val. In hindsight, the ripple
+    // of Integer and comparison is a larger pain point.
+    public Integer getIntegerValue() {
         try {
-            return new Integer(this.value);
+            return new Integer(value);
         } catch (NumberFormatException ne) {
             int intVal = 0;
-            switch (this.value) {
+            switch (value) {
                 case "J":
                     intVal = 11;
                     break;
@@ -46,10 +48,10 @@ public class Card implements Comparable<Card> {
     @Override
     public int compareTo(Card c) {
         // suits don't affect value ranking
-        if (this.getIntValue() == c.getIntValue() ) {
+        if (getIntegerValue().equals(c.getIntegerValue())) {
             return 0;
         } else {
-            return this.getIntValue() > c.getIntValue() ? 1 : -1;
+            return getIntegerValue() > c.getIntegerValue() ? 1 : -1;
         }
 
     }
@@ -59,6 +61,6 @@ public class Card implements Comparable<Card> {
      * @return Card in format "$value $suit"
      */
     public String asString() {
-        return this.value + " " + this.suit;
+        return value + " " + suit;
     }
 }
