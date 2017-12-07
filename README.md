@@ -13,7 +13,7 @@ Go to repo root dir
 # Compile app
 ```bash
 cd src
-javac com/errant01/cardgame/CardRank.java
+javac com/errant01/cardgame/*
 ```
 
 # Run CardRank app
@@ -35,13 +35,12 @@ to run custom hands, edit the default hands in `CardRank.java`, recompile and ru
 after Compile app step, run these commands to compile
 ```bash
 cd ../test
-javac -cp ../src:../ext/lib/junit-4.12.jar com/errant01/cardgame/GameTest.java com/errant01/cardgame/HandTest.java
+javac -cp ../src:../ext/lib/junit-4.12.jar com/errant01/cardgame/GameTest.java com/errant01/cardgame/*
 
 ```
-Then run these commands to run the two test files
+Then run these commands to run the two test suite
 ```bash
-java -cp .:../src:../ext/lib/junit-4.12.jar:../ext/lib/hamcrest-core-1.3.jar org.junit.runner.JUnitCore com.errant01.cardgame.HandTest
-java -cp .:../src:../ext/lib/junit-4.12.jar:../ext/lib/hamcrest-core-1.3.jar org.junit.runner.JUnitCore com.errant01.cardgame.GameTest
+java -cp .:../src:../ext/lib/junit-4.12.jar:../ext/lib/hamcrest-core-1.3.jar org.junit.runner.JUnitCore com.errant01.cardgame.CardRankTestSuite
 
 ```
 The tests will run, each one is a . on the console. If there are failures they will be identified on the console.
