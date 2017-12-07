@@ -1,5 +1,5 @@
 # cardgame
-Package to level hands in a card game
+Package to rank hands in a card game
 
 # Setup
 Install Java 8 JDK per OS requirements
