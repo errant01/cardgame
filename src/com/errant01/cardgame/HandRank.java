@@ -1,6 +1,7 @@
 package com.errant01.cardgame;
 
 public enum HandRank {
+    // per wiki ranking number
     STRAIGHT_FLUSH (1, "Straight Flush"),
     FOUR_OF_KIND (2, "Four of a kind"),
     FULL_HOUSE (3, "Full House"),
@@ -11,16 +12,16 @@ public enum HandRank {
     PAIR (8, "One Pair"),
     HIGH_CARD (9, "High Card");
 
-    private final int rank;
+    private final int level;
     private final String label;
 
-    HandRank(int rank, String label) {
-        this.rank = rank;
+    HandRank(int level, String label) {
+        this.level = level;
         this.label = label;
     }
 
-    public int getRank() {
-        return rank;
+    public int getLevel() {
+        return level;
     }
 
     public String getLabel() {

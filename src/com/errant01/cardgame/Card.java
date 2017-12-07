@@ -1,6 +1,6 @@
 package com.errant01.cardgame;
 
-public class Card {
+public class Card implements Comparable<Card> {
     private String value;
     private String suit;
 
@@ -17,13 +17,19 @@ public class Card {
         return value;
     }
 
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     // TODO improve perf - this is an expensive calc to make on sorting Comparator
-    public Integer getIntValue() {
+    // TODO go back to int: used Integer here over int for simplicity of parseInt test and return val. In hindsight, the ripple
+    // of Integer and comparison is a larger pain point.
+    public Integer getIntegerValue() {
         try {
-            return new Integer(this.value);
+            return new Integer(value);
         } catch (NumberFormatException ne) {
             int intVal = 0;
-            switch (this.value) {
+            switch (value) {
                 case "J":
                     intVal = 11;
                     break;
@@ -36,6 +42,9 @@ public class Card {
                 case "A":
                     intVal = 14;
                     break;
+                case "AL": // Ace Low case
+                    intVal = 1;
+                    break;
                 default:
                     throw new NumberFormatException("Card value not allowed in card: " + asString() + ". Correct Input.");
             }
@@ -43,11 +52,22 @@ public class Card {
         }
     }
 
+    @Override
+    public int compareTo(Card c) {
+        // suits don't affect value ranking
+        if (getIntegerValue().equals(c.getIntegerValue())) {
+            return 0;
+        } else {
+            return getIntegerValue() > c.getIntegerValue() ? 1 : -1;
+        }
+
+    }
+
     /**
      * For console display
      * @return Card in format "$value $suit"
      */
     public String asString() {
-        return this.value + " " + this.suit;
+        return value + " " + suit;
     }
 }
