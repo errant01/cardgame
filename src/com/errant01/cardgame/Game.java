@@ -99,7 +99,6 @@ public class Game {
                 if (tie) {
                     orderByHandsMinusGroups();
                 }
-
                 break;
             case HIGH_CARD:
                 // check next highest card
