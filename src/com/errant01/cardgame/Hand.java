@@ -124,18 +124,10 @@ public class Hand {
         }
         sb.deleteCharAt(sb.length() - 1);
         sb.append("]");
-        if (straight) {
-            sb.append(" ").append("isStraight");
+        if (rank != null) {
+            sb.append(" ").append(rank.getLabel());
         }
-        if (flush) {
-            sb.append(" ").append("isFlush");
-        }
-        if (!bigGroup.isEmpty()) {
-            sb.append(" ").append(bigGroup.size()).append(" of ").append(bigGroup.get(0).getValue());
-        }
-        if (!smGroup.isEmpty()) {
-            sb.append(" ").append(smGroup.size()).append(" of ").append(smGroup.get(0).getValue());
-        }
+
         return sb.toString();
     }
 
@@ -169,8 +161,7 @@ public class Hand {
         straight = true;
         int aceCount = 0;
         int aceIndex = 0;
-        // only LinkedList suffers for perf on for with counter loops, so ok to use to skip 0 index
-        // also optimizing to traverse only once for both straight and flush checks
+        // optimizing to traverse only once for both straight and flush checks
         for (int i = 0; i < cards.size(); i++) {
             // fail flush if suit different
             if (flush && !cards.get(i).getSuit().equals(compareSuit)) {
