@@ -32,11 +32,6 @@ public class Game {
         hand2.sort();
     }
 
-    public void evaluateHands() {
-        hand1.evaluate();
-        hand2.evaluate();
-    }
-
     public void rankHands() {
         hand1.determineRank();
         hand2.determineRank();
@@ -47,13 +42,12 @@ public class Game {
             rankHands();
         }
 
+        // order by hand rank level
         if (hand1.getRank().getLevel() > hand2.getRank().getLevel()) {
             swapHands();
             return;
         } else if (hand1.getRank().getLevel() < hand2.getRank().getLevel()) {
             return;
-        } else {
-            tie = true;
         }
 
         // determine tie case
@@ -76,6 +70,7 @@ public class Game {
                 break;
             case FLUSH:
                 // check next highest card
+                tie = true;
                 orderHandsByNextHighestCard(0, hand1.getCards(), hand2.getCards());
                 break;
             case STRAIGHT:
@@ -108,6 +103,7 @@ public class Game {
                 break;
             case HIGH_CARD:
                 // check next highest card
+                tie = true;
                 orderHandsByNextHighestCard(0, hand1.getCards(), hand2.getCards());
                 break;
         }

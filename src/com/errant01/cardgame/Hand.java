@@ -61,8 +61,7 @@ public class Hand {
 
     // TODO convert to scoring method here for performance, especially if project will involve more than two hands or type of game
     public void evaluate() {
-        determineFlush();
-        determineStraight();
+        determineStraightFlush();
         if (!straight && !flush) {
             determineGroups();
         }
@@ -140,34 +139,56 @@ public class Hand {
         return sb.toString();
     }
 
-    // All 5 cards must be in a flush
-    private void determineFlush() {
-        if (!sorted) {
-            sort();
-        }
-        flush = true;
-        String compareSuit = cards.get(0).getSuit();
-        // only LinkedList suffers for perf on for with counter loops, so ok to use to skip 0 index
-        for (int i = 1; i < cards.size(); i++) {
-            if (!cards.get(i).getSuit().equals(compareSuit)) {
-                flush = false;
-                break;
-            }
-        }
-    }
+    private void determineAceLowStraight(int aceIndex) {
+        // makeAceLow
+        cards.get(aceIndex).setValue("AL");
 
-    // All 5 cards must be in a straight
-    private void determineStraight() {
-        if (!sorted) {
-            sort();
-        }
+        // check for straight again
+        sort();
         straight = true;
-        // check that all cards are a single decrement from previous
         for (int i = 0; i < cards.size() - 1; i++) {
             if (!isTwoCardSeq(cards.get(i), cards.get(i + 1))) {
                 straight = false;
                 break;
             }
+        }
+
+        // if !straight, revert
+        if (!straight) {
+            cards.get(aceIndex).setValue("A");
+            sort();
+        }
+    }
+
+    private void determineStraightFlush() {
+        if (!sorted) {
+            sort();
+        }
+        flush = true;
+        String compareSuit = cards.get(0).getSuit();
+        straight = true;
+        int aceCount = 0;
+        int aceIndex = 0;
+        // only LinkedList suffers for perf on for with counter loops, so ok to use to skip 0 index
+        // also optimizing to traverse only once for both straight and flush checks
+        for (int i = 0; i < cards.size(); i++) {
+            // fail flush if suit different
+            if (flush && !cards.get(i).getSuit().equals(compareSuit)) {
+                flush = false;
+            }
+            // fail straight if next card not in sequence
+            if (straight && i < cards.size() - 1 && !isTwoCardSeq(cards.get(i), cards.get(i + 1))) {
+                straight = false;
+            }
+            // count Aces
+            if (aceCount < 2 && cards.get(i).getValue().equals("A")) {
+                aceIndex = i;
+                aceCount++;
+            }
+        }
+
+        if (!straight && aceCount == 1) {
+            determineAceLowStraight(aceIndex);
         }
     }
 

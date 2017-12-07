@@ -267,4 +267,20 @@ public class GameTest {
         assertTrue(g3.isTie());
     }
 
+    @Test
+    public void compareAceLowStraight() throws Exception {
+        List<Card> cards1 = initHand(TestHands.STRAIGHT_ACE_LO);
+        List<Card> cards2 = initHand(TestHands.STRAIGHT_HI);
+        Game g = new Game(cards1, cards2);
+        g.orderHands();
+        // check first cards
+        assertEquals(g.getHand1().getCards().get(0).getValue(), "A");
+        assertEquals(g.getHand2().getCards().get(0).getValue(), "5");
+
+        Game g2 = new Game(cards2, cards1);
+        g2.orderHands();
+        assertEquals(g2.getHand1().getCards().get(0).getValue(), "A");
+        assertEquals(g2.getHand2().getCards().get(0).getValue(), "5");
+    }
+
 }

@@ -144,4 +144,12 @@ public class HandTest {
         hand.determineRank();
         assertEquals(HandRank.HIGH_CARD, hand.getRank());
     }
+
+    @Test
+    public void rankAceLowStraight() throws Exception {
+        Hand hand = new Hand(Arrays.asList(TestHands.STRAIGHT_ACE_LO));
+        hand.determineRank();
+        assertEquals(HandRank.STRAIGHT, hand.getRank());
+        assertEquals("AL", hand.getCards().get(4).getValue());
+    }
 }

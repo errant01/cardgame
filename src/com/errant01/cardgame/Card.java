@@ -17,6 +17,10 @@ public class Card implements Comparable<Card> {
         return value;
     }
 
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     // TODO improve perf - this is an expensive calc to make on sorting Comparator
     // TODO go back to int: used Integer here over int for simplicity of parseInt test and return val. In hindsight, the ripple
     // of Integer and comparison is a larger pain point.
@@ -37,6 +41,9 @@ public class Card implements Comparable<Card> {
                     break;
                 case "A":
                     intVal = 14;
+                    break;
+                case "AL": // Ace Low case
+                    intVal = 1;
                     break;
                 default:
                     throw new NumberFormatException("Card value not allowed in card: " + asString() + ". Correct Input.");

@@ -94,6 +94,15 @@ public final class TestHands {
             new Card("9", "D")
     };
 
+    public static final Card[] STRAIGHT_ACE_LO = new Card[] {
+            new Card("5", "S"),
+            new Card("3", "D"),
+            new Card("A", "S"),
+            new Card("2", "H"),
+            new Card("4", "D")
+    };
+
+
     // 3 of a kind
     public static final Card[] THREE_KIND_HI = new Card[] {
             new Card("10", "D"),
@@ -138,19 +147,19 @@ public final class TestHands {
 
     // 1 pair
     public static final Card[] ONE_PAIR_HI = new Card[] {
-            new Card("10", "D"),
+            new Card("A", "D"),
             new Card("8", "S"),
             new Card("9", "S"),
             new Card("5", "D"),
-            new Card("10", "H")
+            new Card("A", "H")
     };
 
     public static final Card[] ONE_PAIR_LO = new Card[] {
-            new Card("10", "D"),
+            new Card("A", "D"),
             new Card("8", "S"),
             new Card("9", "S"),
             new Card("3", "D"),
-            new Card("10", "H")
+            new Card("A", "H")
     };
 
     // high card
